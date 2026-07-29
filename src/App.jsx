@@ -6,6 +6,13 @@ import ListaTarefas from './Componentes/Formulario/ListaTarefas';
 import Header from './Componentes/Header/Header';
 
 function App() {
+const TarefasDaLista = [
+  { id: "1", titulo: "ti", concluida: false, Prioridade: "media" },
+  { id: "2", titulo: "ta", concluida: false, Prioridade: "media" },
+  { id: "3", titulo: "tu", concluida: false, Prioridade: "alta" },
+  { id: "4", titulo: "te", concluida: true, Prioridade: "alta" },
+];
+
   return (
     <div id="app">
       <Header titulo="TaskFlow" subtitulo="Gerencie suas tarefas" />
@@ -14,7 +21,9 @@ function App() {
         <Formulario />
         <section id="bloco-tarefas">
           <ul id="lista-tarefas">
-            <ListaTarefas
+            <ListaTarefas tarefas={TarefasDaLista} />
+
+           {/* <ListaTarefas
               texto="Estudar css"
               concluida={true}
               prioridade="media"
@@ -28,9 +37,12 @@ function App() {
               texto="Estudar React"
               concluida={true}
               prioridade="media"
-            />
+            />*/}
+
           </ul>
-          <p id="msg-vazia" className='msg-vazia hidden'>Nenhuma tarefa aqui ainda</p>
+          <p id="msg-vazia" className="msg-vazia hidden">
+            Nenhuma tarefa aqui ainda
+          </p>
         </section>
       </main>
       <Footer />

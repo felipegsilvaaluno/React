@@ -8,7 +8,7 @@
     );
 }
 
-export default ListaTarefas;*/}
+export default ListaTarefas;
 
 
 import styles from './ListaTarefas.module.css';
@@ -32,6 +32,31 @@ function ListaTarefas({ texto, concluida = false, prioridade = "media" }) {
       <button className={styles.btnDeletar}>X</button>
     </li>
   );
+}
+
+export default ListaTarefas;*/}
+
+import styles from "./ListaTarefas.module.css";
+
+function ListaTarefas({tarefas}) {
+
+  return tarefas.map((tarefa) => {
+    
+    const classeItem = tarefa.concluida
+      ? `${styles.tarefa} ${styles.concluida}`
+      : styles.tarefa;
+
+    const classeTexto = tarefa.concluida
+      ? styles.textoTarefaConcluido
+      : styles.textoTarefa;           
+
+    return (
+      <li key={tarefa.id} className={classeItem}>
+        <span className={classeTexto}>{tarefa.titulo}</span>
+        <button className={styles.btnDeletar}>X</button>
+      </li>
+    );
+  });
 }
 
 export default ListaTarefas;
