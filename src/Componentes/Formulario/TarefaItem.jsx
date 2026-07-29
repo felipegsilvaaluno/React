@@ -38,7 +38,7 @@ export default ListaTarefas;*/}
 
 import styles from "./ListaTarefas.module.css";
 
-function TarefaItem({ texto, concluida = false }) {
+function TarefaItem({ texto, concluida = false, prioridade = 'media' }) {
 
   const classeItem = concluida
     ? styles.tarefa + " " + styles.concluida
@@ -49,9 +49,12 @@ function TarefaItem({ texto, concluida = false }) {
     ? styles.textoTarefaConcluido
     : styles.textoTarefa;
 
+  const classePrioridade = styles['badge-prioridade'] + ' ' + styles['badge' + prioridade]
+
   return (
     <li className={classeItem}>
       <span className={classeTexto}>{texto}</span>
+      <span className={classePrioridade}>{prioridade}</span>
       <button className={styles.btnDeletar}>X</button>
     </li>
   );
