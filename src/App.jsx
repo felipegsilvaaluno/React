@@ -20,29 +20,7 @@ const TarefasDaLista = [
         <Filtros />
         <Formulario />
         <section id="bloco-tarefas">
-          <ul id="lista-tarefas">
-            <ListaTarefas tarefas={TarefasDaLista} />
-
-           {/* <ListaTarefas
-              texto="Estudar css"
-              concluida={true}
-              prioridade="media"
-            />
-            <ListaTarefas
-              texto="Fazer as atividades pendentes"
-              concluida={false}
-              prioridade="media"
-            />
-            <ListaTarefas
-              texto="Estudar React"
-              concluida={true}
-              prioridade="media"
-            />*/}
-
-          </ul>
-          <p id="msg-vazia" className="msg-vazia hidden">
-            Nenhuma tarefa aqui ainda
-          </p>
+        <ListaTarefas tarefas={TarefasDaLista} />          
         </section>
       </main>
       <Footer />
