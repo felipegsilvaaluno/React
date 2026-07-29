@@ -44,7 +44,6 @@ function TarefaItem({ texto, concluida = false, prioridade = 'media' }) {
     ? styles.tarefa + " " + styles.concluida
     : styles.tarefa;
 
-
   const classeTexto = concluida
     ? styles.textoTarefaConcluido
     : styles.textoTarefa;

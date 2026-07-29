@@ -10,7 +10,7 @@ const TarefasDaLista = [
   { id: "1", titulo: "ti", concluida: false, Prioridade: "media" },
   { id: "2", titulo: "ta", concluida: false, Prioridade: "media" },
   { id: "3", titulo: "tu", concluida: false, Prioridade: "alta" },
-  { id: "4", titulo: "te", concluida: true, Prioridade: "alta" },
+  { id: "4", titulo: "te", concluida: false, Prioridade: "alta" },
 ];
 
   return (
