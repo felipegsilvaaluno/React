@@ -7,24 +7,23 @@ import ListaTarefas from "./Componentes/Formulario/ListaTarefas";
 import Header from "./Componentes/Header/Header";
 
 function App() {
-
-  // Estado — substitui o array fixo do Dia 3
   const [tarefas, setTarefas] = useState([]);
   const [proximoId, setProximoId] = useState(1);
   const [texto, setTexto] = useState("");
+  const [prioridade, setPrioridade] = useState("media");
 
-  // Funcao que adiciona nova tarefa ao estado
   function adicionarTarefa() {
-    if (texto.trim() === "") return; // validacao
+    if (texto.trim() === "") return; 
     const nova = {
       id: proximoId,
       titulo: texto.trim(),
       concluida: false,
-      prioridade: "media",
+      prioridade: prioridade,
     };
     setTarefas([...tarefas, nova]); // adiciona ao array
     setProximoId(proximoId + 1); // incrementa o id
     setTexto(""); // limpa o campo
+    setPrioridade("media"); // adiciona a prioridade
   }
 
   {/*const TarefasDaLista = [
@@ -54,11 +53,14 @@ function App() {
 
             <label htmlFor="prioridade">Prioridade:</label>
 
-            <select id="prioridade" name="prioridade">
+            <select
+              id="prioridade"
+              name="prioridade"
+              value={prioridade} 
+              onChange={(e) => setPrioridade(e.target.value)}
+            >
               <option value="alta">Alta</option>
-
               <option value="media">Média</option>
-
               <option value="baixa">Baixa</option>
             </select>
 
