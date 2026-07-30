@@ -40,6 +40,8 @@ import styles from "./ListaTarefas.module.css";
 
 function TarefaItem({ texto, concluida = false, prioridade = 'media' }) {
 
+  console.log(texto)
+
   const classeItem = concluida
     ? styles.tarefa + " " + styles.concluida
     : styles.tarefa;

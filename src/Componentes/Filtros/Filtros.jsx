@@ -1,8 +1,8 @@
 function Filtros(){
     return (
       <section id="painel-filtros">
-        <div class="filtros">
-          <span class="filtro" id="contador ativo" data-filtro="todas">
+        <div className="filtros">
+          <span className="filtro" id="contador ativo" data-filtro="todas">
             Todas (<span id="qtd-todas">0</span>)
           </span>
           <span id="contador" data-filtro="pendentes">
