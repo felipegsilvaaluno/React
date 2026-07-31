@@ -50,7 +50,7 @@ function TarefaItem({ texto, concluida = false, prioridade = 'media' }) {
     ? styles.textoTarefaConcluido
     : styles.textoTarefa;
 
-  const classePrioridade = styles['badge-prioridade'] + ' ' + styles['badge' + prioridade]
+  const classePrioridade = styles['badge-prioridade'] + ' ' + styles['badge-' + prioridade]
 
   return (
     <li className={classeItem}>

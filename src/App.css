@@ -76,7 +76,7 @@ button:hover {
   text-align: center;
 }
 
-.tarefa {
+/*.tarefa {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -99,4 +99,4 @@ button:hover {
 .concluida {
   text-decoration: line-through;
   color: #b4bcc7be;
-}
+}*/

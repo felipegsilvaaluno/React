@@ -12,6 +12,7 @@
     background-color 0.15s ease,
     border-color 0.15s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin-top: 3px;
 }
 
 .tarefa:hover {
@@ -21,7 +22,7 @@
 /* Prioridades — cor da borda esquerda */
 .tarefa.alta   { border-left-color: #EF4444; }
 .tarefa.media  { border-left-color: #F5A623; }
-.tarefa.baixa  { border-left-color: #22C55E; }
+.tarefa.baixa  { border-left-color: #22C55E; background-color: none; }
 
 .textoTarefa {
   flex: 1;

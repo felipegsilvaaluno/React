@@ -6,7 +6,7 @@ function Contador() {
   return (
     <div>
       <p>Valor: {contador}</p>
-      <button onClick={() => setContador(contador + 1)}>Incrementar</button>
+      <button onClick={() => setContador(contador + 1)}>SÓ PARA CLICAR</button>
     </div>
   );
 }
