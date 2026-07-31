@@ -34,29 +34,42 @@ function ListaTarefas({ texto, concluida = false, prioridade = "media" }) {
   );
 }
 
-export default ListaTarefas;*/}
+export default ListaTarefas;*/
+}
 
 import styles from "./ListaTarefas.module.css";
+import { FaTrashAlt } from "react-icons/fa";
 
-function TarefaItem({ texto, concluida = false, prioridade = 'media' }) {
+function TarefaItem({
+  texto,
+  concluida = false,
+  prioridade = "media",
+  onDeletar,
+  onConcluir,
+}) {
+  console.log(texto);
 
-  console.log(texto)
-
-  const classeItem = concluida
-    ? styles.tarefa + " " + styles.concluida
-    : styles.tarefa;
+  const classeItem = [
+    styles.tarefa,
+    concluida ? styles.concluida : "",
+    styles[prioridade],
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const classeTexto = concluida
     ? styles.textoTarefaConcluido
     : styles.textoTarefa;
 
-  const classePrioridade = styles['badge-prioridade'] + ' ' + styles['badge-' + prioridade]
+  const classePrioridade = `${styles["badge-prioridade"]} ${styles["badge-" + prioridade]}`;
 
   return (
-    <li className={classeItem}>
+    <li className={classeItem} onClick={onConcluir}>
       <span className={classeTexto}>{texto}</span>
       <span className={classePrioridade}>{prioridade}</span>
-      <button className={styles.btnDeletar}>X</button>
+      <button className={styles.btnDeletar} onClick={e => {e.stopPropagation(); onDeletar();}}>
+        <FaTrashAlt size={20} />
+      </button>
     </li>
   );
 }

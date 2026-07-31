@@ -13,25 +13,32 @@ function App() {
   const [prioridade, setPrioridade] = useState("media");
 
   function adicionarTarefa() {
-    if (texto.trim() === "") return; 
+    if (texto.trim() === "") return;
+
     const nova = {
       id: proximoId,
       titulo: texto.trim(),
       concluida: false,
       prioridade: prioridade,
     };
+
     setTarefas([...tarefas, nova]); // adiciona ao array
     setProximoId(proximoId + 1); // incrementa o id
     setTexto(""); // limpa o campo
-    setPrioridade("media"); // adiciona a prioridade
+    setPrioridade("media"); // reseta a prioridade para o padrão
   }
 
-  {/*const TarefasDaLista = [
-    { id: "1", titulo: "ti", concluida: false, prioridade: "media" },
-    { id: "2", titulo: "ta", concluida: false, prioridade: "media" },
-    { id: "3", titulo: "tu", concluida: false, prioridade: "alta" },
-    { id: "4", titulo: "te", concluida: true, prioridade: "alta" },
-  ];*/}
+  // Função de deletar tarefa
+  function deletarTarefa(id) {
+    setTarefas(tarefas.filter((t) => t.id !== id));
+  }
+
+  // Função de concluir/desconcluir tarefa adicionada
+  function concluirTarefa(id) {
+    setTarefas(
+      tarefas.map((t) => (t.id === id ? { ...t, concluida: !t.concluida } : t)),
+    );
+  }
 
   return (
     <div id="app">
@@ -56,7 +63,7 @@ function App() {
             <select
               id="prioridade"
               name="prioridade"
-              value={prioridade} 
+              value={prioridade}
               onChange={(e) => setPrioridade(e.target.value)}
             >
               <option value="alta">Alta</option>
@@ -74,7 +81,11 @@ function App() {
           </form>
         </section>
         <section id="bloco-tarefas">
-          <ListaTarefas tarefas={tarefas} />
+          <ListaTarefas
+            tarefas={tarefas}
+            onDeletar={deletarTarefa}
+            onConcluir={concluirTarefa}
+          />
         </section>
       </main>
       <Footer />

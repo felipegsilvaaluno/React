@@ -1,7 +1,6 @@
 import TarefaItem from "./TarefaItem";
 
-function ListaTarefas({ tarefas }) {
-
+function ListaTarefas({ tarefas, onDeletar, onConcluir }) {
   return (
     <section id="lista-section">
       {/* Mensagem quando nao ha tarefas */}
@@ -18,10 +17,12 @@ function ListaTarefas({ tarefas }) {
         <ul id="lista-tarefas">
           {tarefas.map((tarefa) => (
             <TarefaItem
-              key={tarefa.id}
+              key={tarefa.id} 
               texto={tarefa.titulo}
               concluida={tarefa.concluida}
               prioridade={tarefa.prioridade}
+              onDeletar={() => onDeletar(tarefa.id)}
+              onConcluir={() => onConcluir(tarefa.id)}
             />
           ))}
         </ul>
