@@ -11,6 +11,7 @@ function App() {
   const [proximoId, setProximoId] = useState(1);
   const [texto, setTexto] = useState("");
   const [prioridade, setPrioridade] = useState("media");
+  const [filtroAtivo, setFiltroAtivo] = useState("todas");
 
   function adicionarTarefa() {
     if (texto.trim() === "") return;
@@ -22,32 +23,51 @@ function App() {
       prioridade: prioridade,
     };
 
-    setTarefas([...tarefas, nova]); // adiciona ao array
-    setProximoId(proximoId + 1); // incrementa o id
-    setTexto(""); // limpa o campo
-    setPrioridade("media"); // reseta a prioridade para o padrão
+    setTarefas([...tarefas, nova]);
+    setProximoId(proximoId + 1);
+    setTexto("");
+    setPrioridade("media");
   }
 
-  // Função de deletar tarefa
   function deletarTarefa(id) {
     setTarefas(tarefas.filter((t) => t.id !== id));
   }
 
-  // Função de concluir/desconcluir tarefa adicionada
   function concluirTarefa(id) {
     setTarefas(
       tarefas.map((t) => (t.id === id ? { ...t, concluida: !t.concluida } : t)),
     );
   }
 
+  // Lógica de filtragem das tarefas
+  const tarefasFiltradas = tarefas.filter((tarefa) => {
+    if (filtroAtivo === "pendentes") return !tarefa.concluida;
+    if (filtroAtivo === "concluidas") return tarefa.concluida;
+    return true; 
+  });
+
+  // Quantidades para os contadores
+  const qtdTodas = tarefas.length;
+  const qtdPendentes = tarefas.filter((t) => !t.concluida).length;
+  const qtdConcluidas = tarefas.filter((t) => t.concluida).length;
+
   return (
     <div id="app">
       <Contador />
       <Header titulo="TaskFlow" subtitulo="Gerencie suas tarefas" />
       <main>
-        <Filtros />
+        <Filtros
+          filtroAtivo={filtroAtivo}
+          setFiltroAtivo={setFiltroAtivo}
+          qtdTodas={qtdTodas}
+          qtdPendentes={qtdPendentes}
+          qtdConcluidas={qtdConcluidas}
+        />
         <section className="container">
-          <form className="formulario-tarefa">
+          <form
+            className="formulario-tarefa"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <label htmlFor="titulo">Adicione a Tarefa</label>
 
             <input
@@ -81,10 +101,12 @@ function App() {
           </form>
         </section>
         <section id="bloco-tarefas">
+          {/* Passamos as tarefas filtradas para a lista */}
           <ListaTarefas
-            tarefas={tarefas}
+            tarefas={tarefasFiltradas}
             onDeletar={deletarTarefa}
             onConcluir={concluirTarefa}
+            
           />
         </section>
       </main>
