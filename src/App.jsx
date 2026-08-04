@@ -2,7 +2,7 @@ import "./App.css";
 import Filtros from "./Componentes/Filtros/Filtros";
 import Footer from "./Componentes/Footer/Footer";
 import Contador from "./Componentes/Formulario/Contador";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ListaTarefas from "./Componentes/Formulario/ListaTarefas";
 import Header from "./Componentes/Header/Header";
 
@@ -27,7 +27,38 @@ function App() {
     setProximoId(proximoId + 1);
     setTexto("");
     setPrioridade("media");
+  };
+
+//SALVAR NO LOCAL STOREGE USANDO USEREFFECT
+
+useEffect(() => {
+  const tarefasSalvas = localStorage.getItem("taskflow_tarefas");
+  if (tarefasSalvas) {
+    const parsed = JSON.parse(tarefasSalvas);
+    setTarefas(parsed);
+    if (parsed.length > 0) {
+      const maiorId = Math.max(...parsed.map((t) => t.id));
+      setProximoId(maiorId + 1);
+    }
   }
+}, []); 
+
+useEffect(() => {
+  if (tarefas.length > 0) {
+    localStorage.setItem("taskflow_tarefas", JSON.stringify(tarefas));
+  }
+}, [tarefas]);
+
+
+  useEffect(() => {
+    const pendentes = tarefas.filter((t) => !t.concluida).length;
+
+    if (pendentes > 0) {
+      document.title = `(${pendentes}) Taskflow`;
+    } else {
+      document.title = "TaskFlow";
+    }
+  }, [tarefas]);
 
   function deletarTarefa(id) {
     setTarefas(tarefas.filter((t) => t.id !== id));
