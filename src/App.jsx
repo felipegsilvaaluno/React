@@ -13,6 +13,8 @@ function App() {
   const [prioridade, setPrioridade] = useState("media");
   const [filtroAtivo, setFiltroAtivo] = useState("todas");
 
+  const [carregado, setCarregado] = useState(false)
+
   function adicionarTarefa() {
     if (texto.trim() === "") return;
 
@@ -34,20 +36,23 @@ function App() {
 useEffect(() => {
   const tarefasSalvas = localStorage.getItem("taskflow_tarefas");
   if (tarefasSalvas) {
-    const parsed = JSON.parse(tarefasSalvas);
-    setTarefas(parsed);
-    if (parsed.length > 0) {
-      const maiorId = Math.max(...parsed.map((t) => t.id));
-      setProximoId(maiorId + 1);
+    const dados = JSON.parse(tarefasSalvas);
+    setTarefas(dados);
+    if (dados.length > 0) {
+      setProximoId(dados[dados.length - 1].id + 1);
+      //const maiorId = Math.max(...dados.map((t) => t.id));
+      //setProximoId(maiorId + 1);
     }
   }
+  setCarregado(true)
 }, []); 
 
 useEffect(() => {
-  if (tarefas.length > 0) {
+  if(!carregado) return;
+ // if (tarefas.length > 0) {
     localStorage.setItem("taskflow_tarefas", JSON.stringify(tarefas));
-  }
-}, [tarefas]);
+  //}
+}, [carregado,tarefas]);
 
 
   useEffect(() => {
