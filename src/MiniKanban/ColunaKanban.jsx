@@ -1,6 +1,6 @@
 import CardTarefa from "./CardTarefa";
 
-export default function ColunaKanban({
+function ColunaKanban({
   titulo,
   chaveColuna,
   tarefas,
@@ -20,6 +20,7 @@ export default function ColunaKanban({
         {tarefasDaColuna.map((tarefa) => (
           <CardTarefa
             key={tarefa.id}
+            prioridade={tarefa.prioridade}
             tarefa={tarefa}
             onMover={onMover}
             onRemover={onRemover}
@@ -29,3 +30,5 @@ export default function ColunaKanban({
     </div>
   );
 }
+
+export default ColunaKanban;

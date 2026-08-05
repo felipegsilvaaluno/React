@@ -3,7 +3,6 @@ import TarefaItem from "./TarefaItem";
 function ListaTarefas({ tarefas, onDeletar, onConcluir }) {
   return (
     <section id="lista-section">
-      {/* Mensagem quando nao ha tarefas */}
 
       {tarefas.length === 0 && (
         <p className="msg-vazia">
@@ -11,7 +10,6 @@ function ListaTarefas({ tarefas, onDeletar, onConcluir }) {
         </p>
       )}
 
-      {/* Lista renderizada dinamicamente */}
 
       {tarefas.length > 0 && (
         <ul id="lista-tarefas">

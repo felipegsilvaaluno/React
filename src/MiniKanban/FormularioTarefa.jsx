@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Header from "./Header";
 import ColunaKanban from "./ColunaKanban";
+import Header from "../Componentes/Header/Header";
 
 const COLUNAS = [
   { id: "afazer", titulo: "A Fazer" },
@@ -10,8 +10,9 @@ const COLUNAS = [
 
 function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
   const [texto, setTexto] = useState("");
+   const [prioridade, setPrioridade] = useState("media");
 
-  function handleSubmit(e) {
+  function Enviar(e) {
     e.preventDefault();
     if (!texto.trim()) return;
 
@@ -20,17 +21,19 @@ function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
       texto: texto.trim(),
       concluida: false,
       coluna: "afazer",
+      prioridade: prioridade,
     };
 
     setTarefas([...tarefas, novaTarefa]);
     setTexto("");
+    setPrioridade("media");
   }
 
   return (
     <div>
-      <Header />
+      <Header titulo="TaskFlow - Mini Kanban" />
 
-      <form onSubmit={handleSubmit} className="form-tarefa">
+      <form onSubmit={Enviar} className="form-tarefa">
         <input
           type="text"
           placeholder="Digite uma nova tarefa..."
@@ -38,9 +41,20 @@ function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
           onChange={(e) => setTexto(e.target.value)}
         />
         <button type="submit">Adicionar</button>
+
+        <select
+          id="prioridade"
+          name="prioridade"
+          value={prioridade}
+          onChange={(e) => setPrioridade(e.target.value)}
+        >
+          <option value="alta">Alta</option>
+          <option value="media">Média</option>
+          <option value="baixa">Baixa</option>
+        </select>
+        
       </form>
 
-      {/* A renderização das colunas agora fica aqui dentro */}
       <div className="kanban-board">
         {COLUNAS.map((col) => (
           <ColunaKanban

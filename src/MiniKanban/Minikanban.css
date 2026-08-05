@@ -1,12 +1,15 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
 }
 
-body{
-    background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 127, 153, 1) 100%);
+body {
+  background: url("../../src/assets/montanhas.jpg");
+  background-repeat: no-repeat; 
+  background-size: cover; 
+  background-position: center;
 }
 
 .container {
@@ -38,7 +41,7 @@ h1 {
 
 .form-tarefa button {
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #01080f;
   color: white;
   border: none;
   border-radius: 4px;
@@ -86,7 +89,7 @@ h1 {
   background-color: #fff;
   padding: 12px;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .card p {
@@ -122,7 +125,43 @@ h1 {
   background-color: #f8d7da !important;
 }
 
-footer{
+footer {
   margin-top: 200px;
   color: #ccc;
+}
+
+/* Estilo base para a tag de prioridade */
+.tag-prioridade {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+/* Cores específicas baseadas na prioridade */
+.card.prioridade-alta {
+  border-left: 4px solid #ff4d4d;
+}
+.card.prioridade-alta .tag-prioridade {
+  background-color: #ffe6e6;
+  color: #ff4d4d;
+}
+
+.card.prioridade-media {
+  border-left: 4px solid #ffad33;
+}
+.card.prioridade-media .tag-prioridade {
+  background-color: #fff5e6;
+  color: #ffad33;
+}
+
+.card.prioridade-baixa {
+  border-left: 4px solid #33cc33;
+}
+.card.prioridade-baixa .tag-prioridade {
+  background-color: #e6ffe6;
+  color: #33cc33;
 }
