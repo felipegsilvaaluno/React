@@ -39,6 +39,27 @@ function App() {
     console.log("Promisso criado, aguardando resultado...");
   }
 
+
+  async function buscarUsuario(id) {
+    try{
+      const resposta = await fetch(
+        'https://jsonplaceholder.typicode.com/users/' + id
+      );
+      console.log(resposta);
+      const usuario = await resposta.json();
+
+      console.log("Nome: ", usuario.name);
+      return usuario;
+
+    } catch (erro){
+      console.log("erro;", erro.message)
+      return null;
+
+    } finally {
+      console.log("Finalizado")
+    }
+  }
+
   return (
     <div>
       <button
@@ -57,8 +78,9 @@ function App() {
       </button>
 
       <button onClick={execPromise}>segundo botão</button>
+      <button onClick={buscarUsuario}>Teste API</button>
 
-      <MiniKanban/>
+      <MiniKanban />
     </div>
   );
 }
