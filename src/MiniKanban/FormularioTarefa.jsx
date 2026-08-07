@@ -16,7 +16,10 @@ function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
 
   async function Enviar(e) {
     e.preventDefault();
-    if (!texto.trim()) return;
+    if (!texto.trim() || !cep.trim()){
+      alert("Por favor, preencha tanto a tarefa quanto o CEP.");
+      return;
+    }
 
     let enderecoEncontrado = "";
 
