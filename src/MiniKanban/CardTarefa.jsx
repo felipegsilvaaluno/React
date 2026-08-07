@@ -1,11 +1,12 @@
 function CardTarefa({ tarefa, onMover, onRemover }) {
-  const { id, texto, coluna, prioridade } = tarefa;
+  const { id, texto, coluna, prioridade, endereco } = tarefa;
 
   return (
     <div className={`card prioridade-${prioridade}`}>
       <div className="card-conteudo">
         <span className="tag-prioridade">{prioridade}</span>
         <p>{texto}</p>
+        {endereco && <small className="card-endereco">📍 {endereco}</small>}
       </div>
 
       <div className="acoes">

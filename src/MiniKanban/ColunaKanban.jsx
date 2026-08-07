@@ -1,13 +1,7 @@
 import CardTarefa from "./CardTarefa";
 
-function ColunaKanban({
-  titulo,
-  chaveColuna,
-  tarefas,
-  onMover,
-  onRemover,
-}) {
-  // Filtra as tarefas pertencentes a esta coluna
+function ColunaKanban({ titulo, chaveColuna, tarefas, onMover, onRemover }) {
+ 
   const tarefasDaColuna = tarefas.filter((t) => t.coluna === chaveColuna);
 
   return (
@@ -22,6 +16,7 @@ function ColunaKanban({
             key={tarefa.id}
             prioridade={tarefa.prioridade}
             tarefa={tarefa}
+            endereco={tarefa.endereco}
             onMover={onMover}
             onRemover={onRemover}
           />
