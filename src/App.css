@@ -8,7 +8,7 @@
   background: radial-gradient(rgb(128, 7, 172), #000);
 }*/
 body {
-  background: url("../../src/assets/montanhas.jpg");
+  background: url("./assets/montanhas.jpg");
   background-repeat: no-repeat; 
   background-size: cover; 
   background-position: center;
