@@ -3,7 +3,7 @@ import Sobre from "./Pages/Sobre";
 import Login from "./Pages/Login";
 import MiniKanban from "./MiniKanban/MiniKanban";
 import Tarefasv1 from "./Tarefasv1";
-import RotaPrivada from './componentes/RotaPrivada/RotaPrivada';
+import RotaPrivada from './Componentes/RotaPrivada/RotaPrivada';
 
 function App() {
 
