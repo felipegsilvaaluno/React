@@ -14,10 +14,10 @@ function CardTarefa({ tarefa, onMover, onRemover, onEditar }) {
 
       <div className="acoes">
         {coluna === "andamento" && (
-          <button onClick={() => onMover(id, "afazer")}>←</button>
+          <button onClick={() => onMover(tarefa.id, "afazer")}>←</button>
         )}
         {coluna === "concluido" && (
-          <button onClick={() => onMover(id, "andamento")}>←</button>
+          <button onClick={() => onMover(tarefa.id, "andamento")}>←</button>
         )}
 
         <button onClick={() => onRemover(id)} className="btn-excluir">
@@ -25,10 +25,10 @@ function CardTarefa({ tarefa, onMover, onRemover, onEditar }) {
         </button>
 
         {coluna === "afazer" && (
-          <button onClick={() => onMover(id, "andamento")}>→</button>
+          <button onClick={() => onMover(tarefa.id, "andamento")}>→</button>
         )}
         {coluna === "andamento" && (
-          <button onClick={() => onMover(id, "concluido")}>→</button>
+          <button onClick={() => onMover(tarefa.id, "concluido")}>→</button>
         )}
       </div>
     </div>

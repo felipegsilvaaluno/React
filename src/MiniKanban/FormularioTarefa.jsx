@@ -9,11 +9,16 @@ const COLUNAS = [
   { id: "concluido", titulo: "Concluído" },
 ];
 
-function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
+function FormularioTarefa({
+  tarefas,
+  setTarefas,
+  salvarTarefa,
+  moverTarefa,
+  removerTarefa,
+}) {
   const [modalAberto, setModalAberto] = useState(false);
   const [tarefaEditando, setTarefaEditando] = useState(null);
   const [colunaAtiva, setColunaAtiva] = useState("afazer");
-
   const [filtroPrioridade, setFiltroPrioridade] = useState("todas");
 
   useEffect(() => {
@@ -23,7 +28,7 @@ function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
     if (pendentes > 0) {
       document.title = `(${pendentes}) TaskFlow - Mini Kanban`;
     } else {
-      document.title = `TaskFlow - Mini Kanban`;
+      document.title = "TaskFlow - Mini Kanban";
     }
   }, [tarefas]);
 
@@ -32,11 +37,7 @@ function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
       "Tem certeza que deseja excluir esta tarefa?",
     );
     if (confirmacao) {
-      if (typeof removerTarefa === "function") {
-        removerTarefa(id);
-      } else {
-        setTarefas(tarefas.filter((t) => t.id !== id));
-      }
+      removerTarefa(id);
     }
   }
 
@@ -51,19 +52,8 @@ function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
     setModalAberto(true);
   }
 
-  function salvarTarefa(dados) {
-    if (dados.id) {
-      setTarefas(
-        tarefas.map((t) => (t.id === dados.id ? { ...t, ...dados } : t)),
-      );
-    } else {
-      const novaTarefa = {
-        ...dados,
-        id: Date.now(),
-        concluida: false,
-      };
-      setTarefas([...tarefas, novaTarefa]);
-    }
+  async function handleSalvarTarefa(dados) {
+    await salvarTarefa(dados);
   }
 
   return (
@@ -120,7 +110,7 @@ function FormularioTarefa({ tarefas, setTarefas, moverTarefa, removerTarefa }) {
       <ModalTarefa
         aberto={modalAberto}
         onFechar={() => setModalAberto(false)}
-        onSalvar={salvarTarefa}
+        onSalvar={handleSalvarTarefa}
         tarefa={tarefaEditando}
         coluna={colunaAtiva}
       />

@@ -50,7 +50,7 @@ function ModalTarefa({
     }
   }
 
-  // Limitador de apenas números para o CEP (máximo 8 dígitos)
+
   const apenasNumerosCEP = (e) => {
     const valor = e.target.value.replace(/\D/g, "").slice(0, 8);
     setCep(valor);
@@ -71,11 +71,9 @@ function ModalTarefa({
       coluna: tarefa?.coluna || coluna,
     });
 
-    // Fecha o modal explicitamente após salvar
     onFechar();
   }
 
-  // Se não estiver aberto, não renderiza nada na tela
   if (!aberto) return null;
 
   return (
