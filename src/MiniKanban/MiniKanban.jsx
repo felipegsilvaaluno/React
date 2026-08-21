@@ -5,7 +5,6 @@ import Footer from "../Componentes/Footer/Footer";
 import "./Minikanban.css";
 import Sidebar from "../Componentes/Sidebar/Sidebar";
 
-// Coloque aqui a URL da sua API do MockAPI
 const URL_API = "https://6a85b2a29c451dc67a63fe42.mockapi.io/api/tarefas";
 
 function MiniKanban() {
@@ -22,8 +21,6 @@ function MiniKanban() {
         setErro("");
 
         const resposta = await axios.get(URL_API);
-
-        // resposta.data ja e o array de tarefas
 
         setTarefas(resposta.data);
       } catch (e) {
@@ -58,13 +55,10 @@ function MiniKanban() {
           },
         );
 
-        // Atualizar a tarefa no estado local
-
         setTarefas((tarefasAtuais) =>
           tarefasAtuais.map((t) => (t.id === dados.id ? tarefaEditada : t)),
         );
       } else {
-        // CRIAR — POST (slide anterior)
 
         const { data: novaTarefa } = await axios.post(URL_API, dados);
 
@@ -77,18 +71,15 @@ function MiniKanban() {
     }
   }
 
-  // PATCH - mover tarefa
+  // PATCH/PUT - mover tarefa
   async function moverTarefa(id, novaColuna) {
     try {
-      // PATCH — envia apenas o campo coluna
 
-      const { data: tarefaMovida } = await axios.patch(
+      const { data: tarefaMovida } = await axios.put(
         URL_API + "/" + id,
 
         { coluna: novaColuna },
       );
-
-      // Atualizar o estado local com a tarefa retornada
 
       setTarefas((tarefasAtuais) =>
         tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
@@ -102,8 +93,7 @@ function MiniKanban() {
 
   // DELETE - remover tarefa
   async function deletarTarefa(id) {
-    // Confirmação antes de deletar — UX defensiva
-
+  
     const confirmado = window.confirm(
       "Tem certeza que deseja deletar esta tarefa?",
     );
@@ -111,11 +101,7 @@ function MiniKanban() {
     if (!confirmado) return;
 
     try {
-      // DELETE na API — id na URL
-
       await axios.delete(URL_API + "/" + id);
-
-      // Remover do estado local apenas apos confirmar na API
 
       setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
     } catch (e) {
@@ -129,20 +115,13 @@ function MiniKanban() {
   return (
     <div className="container">
       <Sidebar />
-
-      {/* Feedback de carregamento */}
-
       {carregando && (
         <p style={{ textAlign: "center", color: "#94A3B8" }}>
           Carregando tarefas...
         </p>
       )}
 
-      {/* Feedback de erro */}
-
       {erro && <p style={{ textAlign: "center", color: "#EF4444" }}>{erro}</p>}
-
-      {/* Quadro Kanban — so aparece quando nao esta carregando */}
 
       {!carregando && !erro && (
         <div className="kanban-quadro">{/* ... colunas */}</div>
