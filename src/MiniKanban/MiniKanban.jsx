@@ -4,6 +4,7 @@ import FormularioTarefa from "./FormularioTarefa";
 import Footer from "../Componentes/Footer/Footer";
 import "./Minikanban.css";
 import Sidebar from "../Componentes/Sidebar/Sidebar";
+import api from "../api/api";
 
 const URL_API = "https://6a85b2a29c451dc67a63fe42.mockapi.io/api/tarefas";
 
@@ -17,21 +18,17 @@ function MiniKanban() {
     async function carregarTarefas() {
       try {
         setCarregando(true);
-
         setErro("");
-
-        const resposta = await axios.get(URL_API);
-
+        // api.get — token injetado automaticamente pelo interceptor
+        const resposta = await api.get("/tarefas");
         setTarefas(resposta.data);
       } catch (e) {
-        setErro("Erro ao carregar tarefas. Verifique a conexao.");
-
+        setErro("Erro ao carregar tarefas. Verifique a conexão.");
         console.error(e);
       } finally {
         setCarregando(false);
       }
     }
-
     carregarTarefas();
   }, []);
 
