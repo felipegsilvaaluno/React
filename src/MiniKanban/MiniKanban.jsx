@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+//import axios from "axios";
 import FormularioTarefa from "./FormularioTarefa";
 import Footer from "../Componentes/Footer/Footer";
 import "./Minikanban.css";
 import Sidebar from "../Componentes/Sidebar/Sidebar";
 import api from "../api/api";
 
-const URL_API = "https://6a85b2a29c451dc67a63fe42.mockapi.io/api/tarefas";
+// const URL_API = "https://6a85b2a29c451dc67a63fe42.mockapi.io/api/tarefas";
 
 function MiniKanban() {
   const [tarefas, setTarefas] = useState([]);
@@ -34,79 +34,86 @@ function MiniKanban() {
 
   // POST - criar tarefa
   async function salvarTarefa(dados) {
-    try {
-      if (dados.id !== undefined) {
-        // EDITAR — PUT com o id na URL
-
-        const { data: tarefaEditada } = await axios.put(
-          URL_API + "/" + dados.id,
-
-          {
-            texto: dados.texto,
-
-            prioridade: dados.prioridade,
-
-            cidade: dados.cidade,
-
-            coluna: dados.coluna,
-          },
-        );
-
-        setTarefas((tarefasAtuais) =>
-          tarefasAtuais.map((t) => (t.id === dados.id ? tarefaEditada : t)),
-        );
-      } else {
-
-        const { data: novaTarefa } = await axios.post(URL_API, dados);
-
-        setTarefas((tarefasAtuais) => [...tarefasAtuais, novaTarefa]);
+    if (dados.id === undefined) {
+      // CRIAR — POST /tarefas
+      try {
+        const resposta = await api.post('/tarefas', dados);
+        // id real vem do servidor — não mais de um contador local
+        setTarefas([...tarefas, resposta.data]);
+      } catch (err) {
+        setErro('Erro ao criar tarefa.');
       }
-    } catch (e) {
-      setErro("Erro ao salvar tarefa.");
-
-      console.error(e);
+    } else {
+      // EDITAR — PUT /tarefas/:id
+      try {
+        const resposta = await api.put(`/tarefas/${dados.id}`, dados);
+        // usar resposta.data garante que o estado reflete o servidor
+        setTarefas(tarefas.map(t =>
+          t.id === dados.id ? resposta.data : t
+        ));
+      } catch (err) {
+        setErro('Erro ao editar tarefa.');
+      }
     }
+  }
+
+  async function deletarTarefa(id) {
+    try {
+      await api.delete(`/tarefas/${id}`);
+      // só remove do estado após confirmar no servidor
+      setTarefas(tarefas.filter(t => t.id !== id));
+    } catch (err) {
+      setErro('Erro ao deletar tarefa.');
+    }
+  }
+  // MOVER — PUT /tarefas/:id com nova coluna
+  async function moverTarefa(id, novaColuna) {
+    const resposta = await api.put(
+      `/tarefas/${id}`,
+      { coluna: novaColuna }
+    );
+    setTarefas(tarefas.map(t => t.id === id ? resposta.data : t));
   }
 
   // PATCH/PUT - mover tarefa
-  async function moverTarefa(id, novaColuna) {
-    try {
+  // async function moverTarefa(id, novaColuna) {
+  //   try {
 
-      const { data: tarefaMovida } = await axios.put(
-        URL_API + "/" + id,
+  //     const { data: tarefaMovida } = await axios.put(
+  //       URL_API + "/" + id,
 
-        { coluna: novaColuna },
-      );
+  //       { coluna: novaColuna },
+  //     );
 
-      setTarefas((tarefasAtuais) =>
-        tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
-      );
-    } catch (e) {
-      setErro("Erro ao mover tarefa. Tente novamente.");
+  //     setTarefas((tarefasAtuais) =>
+  //       tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
+  //     );
+  //   } catch (e) {
+  //     setErro("Erro ao mover tarefa. Tente novamente.");
 
-      console.error(e);
-    }
-  }
+  //     console.error(e);
+  //   }
+  // }
 
-  // DELETE - remover tarefa
-  async function deletarTarefa(id) {
-  
-    const confirmado = window.confirm(
-      "Tem certeza que deseja deletar esta tarefa?",
-    );
+  // // DELETE - remover tarefa
+  // async function deletarTarefa(id) {
 
-    if (!confirmado) return;
+  //   const confirmado = window.confirm(
+  //     "Tem certeza que deseja deletar esta tarefa?",
+  //   );
 
-    try {
-      await axios.delete(URL_API + "/" + id);
+  //   if (!confirmado) return;
 
-      setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
-    } catch (e) {
-      setErro("Erro ao deletar tarefa. Tente novamente.");
+  //   try {
+  //     await axios.delete(URL_API + "/" + id);
 
-      console.error(e);
-    }
-  }
+  //     setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
+  //   } catch (e) {
+  //     setErro("Erro ao deletar tarefa. Tente novamente.");
+
+  //     console.error(e);
+  //   }
+  // }
 
 
   return (

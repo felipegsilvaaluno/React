@@ -5,7 +5,6 @@ import { useAuth } from "../../contexts/AuthContext";
 function Sidebar() {
   const { token, logout } = useAuth();
 
-
   const linkClass = ({ isActive }) =>
     isActive ? styles.link + " " + styles.ativo : styles.link;
 
@@ -43,5 +42,4 @@ function Sidebar() {
     </aside>
   );
 }
-
 export default Sidebar;
