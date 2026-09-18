@@ -59,7 +59,7 @@ function ModalTarefa({ aberto, onFechar, onSalvar, tarefa = null, coluna = "afaz
     onSalvar({
       id: tarefa?.id,
       texto: texto.trim(),
-      endereco: cidade,
+      cidade: cidade,
       prioridade,
       coluna: tarefa?.coluna || coluna,
     });

@@ -1,5 +1,5 @@
 function CardTarefa({ tarefa, onMover, onRemover, onEditar }) {
-  const { id, texto, coluna, prioridade, endereco } = tarefa;
+  const { id, texto, coluna, prioridade, cidade, endereco } = tarefa;
 
   return (
     <div
@@ -9,7 +9,11 @@ function CardTarefa({ tarefa, onMover, onRemover, onEditar }) {
       <div className="card-conteudo">
         <span className="tag-prioridade">{prioridade}</span>
         <p>{texto}</p>
-        {endereco && <small className="card-endereco">📍 {endereco}</small>}
+
+        {/* Renderiza apenas a cidade */}
+        {(cidade || endereco) && (
+          <small className="card-endereco">📍 {cidade || endereco}</small>
+        )}
       </div>
 
       <div className="acoes">

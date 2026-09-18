@@ -75,47 +75,6 @@ function MiniKanban() {
     setTarefas(tarefas.map(t => t.id === id ? resposta.data : t));
   }
 
-  // PATCH/PUT - mover tarefa
-  // async function moverTarefa(id, novaColuna) {
-  //   try {
-
-  //     const { data: tarefaMovida } = await axios.put(
-  //       URL_API + "/" + id,
-
-  //       { coluna: novaColuna },
-  //     );
-
-  //     setTarefas((tarefasAtuais) =>
-  //       tarefasAtuais.map((t) => (t.id === id ? tarefaMovida : t)),
-  //     );
-  //   } catch (e) {
-  //     setErro("Erro ao mover tarefa. Tente novamente.");
-
-  //     console.error(e);
-  //   }
-  // }
-
-  // // DELETE - remover tarefa
-  // async function deletarTarefa(id) {
-
-  //   const confirmado = window.confirm(
-  //     "Tem certeza que deseja deletar esta tarefa?",
-  //   );
-
-  //   if (!confirmado) return;
-
-  //   try {
-  //     await axios.delete(URL_API + "/" + id);
-
-  //     setTarefas((tarefasAtuais) => tarefasAtuais.filter((t) => t.id !== id));
-  //   } catch (e) {
-  //     setErro("Erro ao deletar tarefa. Tente novamente.");
-
-  //     console.error(e);
-  //   }
-  // }
-
-
   return (
     <div className="container">
       <Sidebar />
@@ -128,7 +87,7 @@ function MiniKanban() {
       {erro && <p style={{ textAlign: "center", color: "#EF4444" }}>{erro}</p>}
 
       {!carregando && !erro && (
-        <div className="kanban-quadro">{/* ... colunas */}</div>
+        <div className="kanban-quadro"></div>
       )}
 
       {!carregando && (

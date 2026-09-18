@@ -26,7 +26,7 @@ function Login() {
     } catch (err) {
       setErro(err.response?.data?.erro || "Erro ao fazer login");
       setShake(true);
-      setTimeout(() => setShake(false), 500);
+      setTimeout(() => setShake(false), 5000);
     }
   }
 
