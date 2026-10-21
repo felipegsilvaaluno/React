@@ -215,26 +215,34 @@ footer {
   letter-spacing: 0.04em;
 }
 
-.card.prioridade-alta {
-  border-left: none;
-}
-.card.prioridade-alta .tag-prioridade {
-  background-color: #ff8f8f;
+/* --- Estilos das Tags de Prioridade (Ajustados) --- */
+
+/* Baixa = Verde */
+.card.prioridade-baixa .tag-prioridade {
+  background-color: #22c55e;
   color: #ffffff;
 }
 
-.card.prioridade-media {
-  border-left: none;
-}
+/* Média = Amarelo */
 .card.prioridade-media .tag-prioridade {
-  background-color: #f2d600;
-  color: #172b4d;
+  background-color: #eab308;
+  color: #1e293b;
+}
+
+/* Alta = Vermelho */
+.card.prioridade-alta .tag-prioridade {
+  background-color: #ef4444;
+  color: #ffffff;
 }
 
 .card.prioridade-baixa {
-  border-left: none;
+  border-left: 4px solid #22c55e;
 }
-.card.prioridade-baixa .tag-prioridade {
-  background-color: #61bd4f;
-  color: #ffffff;
+
+.card.prioridade-media {
+  border-left: 4px solid #eab308;
+}
+
+.card.prioridade-alta {
+  border-left: 4px solid #ef4444;
 }

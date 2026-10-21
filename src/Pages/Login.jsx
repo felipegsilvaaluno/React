@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import { useAuth } from "../contexts/AuthContext";
-import api from "../api/api";
+import api, { mensagensDeErro } from "../api/api";
 
 function Login() {
   // const [usuario, setUsuario] = useState("");
@@ -24,9 +24,9 @@ function Login() {
       login(usuario, token);
       navigate("/");
     } catch (err) {
-      setErro(err.response?.data?.erro || "Erro ao fazer login");
+      setErro(mensagensDeErro(err).join(" "));
       setShake(true);
-      setTimeout(() => setShake(false), 5000);
+      setTimeout(() => setShake(false), 500);
     }
   }
 

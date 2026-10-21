@@ -15,6 +15,9 @@ function FormularioTarefa({
   salvarTarefa,
   moverTarefa,
   removerTarefa,
+  listaPrioridades = [],
+  listaUsuarios = [],
+  listaProjetos = [],
 }) {
   const [modalAberto, setModalAberto] = useState(false);
   const [tarefaEditando, setTarefaEditando] = useState(null);
@@ -85,9 +88,11 @@ function FormularioTarefa({
           }}
         >
           <option value="todas">Todas</option>
-          <option value="alta">Alta</option>
-          <option value="media">Média</option>
-          <option value="baixa">Baixa</option>
+          {listaPrioridades.map((p) => (
+            <option key={p.id} value={String(p.id)}>
+              {p.descricao}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -98,6 +103,9 @@ function FormularioTarefa({
             titulo={col.titulo}
             chaveColuna={col.id}
             tarefas={tarefas}
+            prioridades={listaPrioridades}
+            usuarios={listaUsuarios}
+            projetos={listaProjetos}
             onMover={moverTarefa}
             onRemover={handleRemoverTarefa}
             onEditar={abrirModalEditar}
@@ -113,6 +121,9 @@ function FormularioTarefa({
         onSalvar={handleSalvarTarefa}
         tarefa={tarefaEditando}
         coluna={colunaAtiva}
+        prioridades={listaPrioridades}
+        usuarios={listaUsuarios}
+        projetos={listaProjetos}
       />
     </div>
   );

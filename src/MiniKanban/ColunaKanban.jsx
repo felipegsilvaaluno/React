@@ -1,9 +1,15 @@
 import CardTarefa from "./CardTarefa";
 
+// Mapeamento de ID do banco -> classe de CSS
+const CLASSE_PRIORIDADE = { 3: "baixa", 5: "media", 6: "alta" };
+
 function ColunaKanban({
   titulo,
   chaveColuna,
   tarefas,
+  prioridades = [],
+  usuarios = [],
+  projetos = [],
   onMover,
   onRemover,
   onEditar,
@@ -12,9 +18,28 @@ function ColunaKanban({
 }) {
   const tarefasDaColuna = tarefas.filter((t) => {
     const pertenceAColuna = t.coluna === chaveColuna;
-    const atendeFiltro =
-      filtroPrioridade === "todas" || t.prioridade === filtroPrioridade;
-    return pertenceAColuna && atendeFiltro;
+    if (!pertenceAColuna) return false;
+
+    if (filtroPrioridade === "todas") return true;
+
+    const idPrio = t.idprioridade || t.id_prioridade;
+
+    if (!isNaN(filtroPrioridade)) {
+      return Number(idPrio) === Number(filtroPrioridade);
+    }
+
+    const prioObj = prioridades.find((p) => Number(p.id) === Number(idPrio));
+    const descPrioridade = (prioObj?.descricao || t.prioridade || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    const filtroNormalizado = filtroPrioridade
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    return descPrioridade === filtroNormalizado;
   });
 
   return (
@@ -38,15 +63,34 @@ function ColunaKanban({
       </div>
 
       <div className="cards-list">
-        {tarefasDaColuna.map((tarefa) => (
-          <CardTarefa
-            key={tarefa.id}
-            tarefa={tarefa}
-            onMover={onMover}
-            onRemover={onRemover}
-            onEditar={onEditar}
-          />
-        ))}
+        {tarefasDaColuna.map((tarefa) => {
+          const idPrio = tarefa.idprioridade || tarefa.id_prioridade;
+          const prioridadeObj = prioridades.find(
+            (p) => Number(p.id) === Number(idPrio)
+          );
+
+          // Procura o nome do responsável
+          const idUser = tarefa.usuario_id || tarefa.usuarioId;
+          const usuarioObj = usuarios.find((u) => Number(u.id) === Number(idUser));
+
+          // Procura o nome do projeto
+          const idProj = tarefa.projeto_id || tarefa.projetoId;
+          const projetoObj = projetos.find((p) => Number(p.id) === Number(idProj));
+
+          return (
+            <CardTarefa
+              key={tarefa.id}
+              tarefa={tarefa}
+              prioridade={CLASSE_PRIORIDADE[idPrio] || "media"}
+              rotuloPrioridade={prioridadeObj?.descricao || "Média"}
+              responsavel={usuarioObj?.nome || "Sem responsável"}
+              projeto={projetoObj?.nome || "Sem projeto"}
+              onMover={onMover}
+              onRemover={onRemover}
+              onEditar={onEditar}
+            />
+          );
+        })}
       </div>
     </div>
   );

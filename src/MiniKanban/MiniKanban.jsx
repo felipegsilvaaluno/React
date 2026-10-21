@@ -1,78 +1,153 @@
 import { useState, useEffect } from "react";
-//import axios from "axios";
 import FormularioTarefa from "./FormularioTarefa";
 import Footer from "../Componentes/Footer/Footer";
 import "./Minikanban.css";
 import Sidebar from "../Componentes/Sidebar/Sidebar";
-import api from "../api/api";
-
-// const URL_API = "https://6a85b2a29c451dc67a63fe42.mockapi.io/api/tarefas";
+import api, { mensagensDeErro } from "../api/api";
 
 function MiniKanban() {
   const [tarefas, setTarefas] = useState([]);
+  const [listaPrioridades, setListaPrioridades] = useState([]);
+  const [listaUsuarios, setListaUsuarios] = useState([]);
+  const [listaProjetos, setListaProjetos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
-  // GET - carregar tarefas da API
   useEffect(() => {
-    async function carregarTarefas() {
+    async function carregarDados() {
       try {
         setCarregando(true);
         setErro("");
-        // api.get — token injetado automaticamente pelo interceptor
-        const resposta = await api.get("/tarefas");
-        setTarefas(resposta.data);
+
+        const [respPrioridades, respTarefas, respUsuarios, respProjetos] =
+          await Promise.all([
+            api.get("/prioridades"),
+            api.get("/tarefas"),
+            api.get("/usuarios"),
+            api.get("/projetos"),
+          ]);
+
+        setListaPrioridades(respPrioridades.data);
+        setTarefas(respTarefas.data);
+        setListaUsuarios(respUsuarios.data);
+        setListaProjetos(respProjetos.data);
       } catch (e) {
-        setErro("Erro ao carregar tarefas. Verifique a conexão.");
+        setErro("Erro ao carregar dados do Kanban. Verifique a conexão.");
         console.error(e);
       } finally {
         setCarregando(false);
       }
     }
-    carregarTarefas();
+    carregarDados();
   }, []);
 
-  // POST - criar tarefa
+  // Garante que o valor devolvido para a chave 'prioridade' é "alta", "media" ou "baixa"
+  function normalizarPrioridadeStrict(dados) {
+    const idPrio = Number(
+      dados?.id_prioridade || dados?.idprioridade || dados?.prioridade_id
+    );
+
+    // Mapeamento direto por ID da API (3: baixa, 5: media, 6: alta / 1: baixa, 2: media, 3: alta)
+    if (idPrio === 3 || idPrio === 1) return "baixa";
+    if (idPrio === 6) return "alta";
+    if (idPrio === 5 || idPrio === 2) return "media";
+
+    // Fallback por verificação de texto caso venha da lista ou objeto
+    let texto = "";
+    const prioObj = listaPrioridades.find((p) => Number(p.id) === idPrio);
+    if (prioObj?.descricao) {
+      texto = prioObj.descricao;
+    } else if (dados?.prioridade) {
+      texto = dados.prioridade;
+    }
+
+    const limpo = texto
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+
+    if (limpo.includes("alta")) return "alta";
+    if (limpo.includes("baix")) return "baixa";
+
+    return "media";
+  }
+
+  // 1. Salvar ou Editar Tarefa
   async function salvarTarefa(dados) {
-    if (dados.id === undefined) {
-      // CRIAR — POST /tarefas
-      try {
-        const resposta = await api.post('/tarefas', dados);
-        // id real vem do servidor — não mais de um contador local
-        setTarefas([...tarefas, resposta.data]);
-      } catch (err) {
-        setErro('Erro ao criar tarefa.');
-      }
+    const prioridadeValidada = normalizarPrioridadeStrict(dados);
+
+    const idUsuarioNum = Number(
+      dados.usuario_id || dados.usuarioId || listaUsuarios[0]?.id || 1
+    );
+    const idProjetoNum = Number(
+      dados.projeto_id || dados.projetoId || listaProjetos[0]?.id || 1
+    );
+
+    const payload = {
+      texto: dados.texto || "",
+      coluna: dados.coluna || "afazer",
+      prioridade: prioridadeValidada,
+      usuarioId: idUsuarioNum,
+      usuario_id: idUsuarioNum,
+      projetoId: idProjetoNum,
+      projeto_id: idProjetoNum,
+      id_prioridade: Number(dados.id_prioridade || dados.idprioridade || 5),
+      idprioridade: Number(dados.id_prioridade || dados.idprioridade || 5),
+    };
+
+    if (dados.id) {
+      const resposta = await api.put(`/tarefas/${dados.id}`, payload);
+      setTarefas(tarefas.map((t) => (t.id === dados.id ? resposta.data : t)));
     } else {
-      // EDITAR — PUT /tarefas/:id
-      try {
-        const resposta = await api.put(`/tarefas/${dados.id}`, dados);
-        // usar resposta.data garante que o estado reflete o servidor
-        setTarefas(tarefas.map(t =>
-          t.id === dados.id ? resposta.data : t
-        ));
-      } catch (err) {
-        setErro('Erro ao editar tarefa.');
-      }
+      const resposta = await api.post("/tarefas", payload);
+      setTarefas([...tarefas, resposta.data]);
     }
   }
 
+  // 2. Deletar Tarefa
   async function deletarTarefa(id) {
     try {
       await api.delete(`/tarefas/${id}`);
-      // só remove do estado após confirmar no servidor
-      setTarefas(tarefas.filter(t => t.id !== id));
-    } catch (err) {
-      setErro('Erro ao deletar tarefa.');
+      setTarefas(tarefas.filter((t) => t.id !== id));
+    } catch (e) {
+      alert(mensagensDeErro ? mensagensDeErro(e).join("\n") : "Erro ao deletar tarefa.");
     }
   }
-  // MOVER — PUT /tarefas/:id com nova coluna
+
+  // 3. Mover Tarefa entre Colunas
   async function moverTarefa(id, novaColuna) {
-    const resposta = await api.put(
-      `/tarefas/${id}`,
-      { coluna: novaColuna }
-    );
-    setTarefas(tarefas.map(t => t.id === id ? resposta.data : t));
+    const tarefa = tarefas.find((t) => t.id === id);
+    if (!tarefa) return;
+
+    try {
+      const prioridadeValidada = normalizarPrioridadeStrict(tarefa);
+
+      const idUsuarioNum = Number(
+        tarefa.usuario_id || tarefa.usuarioId || listaUsuarios[0]?.id || 1
+      );
+      const idProjetoNum = Number(
+        tarefa.projeto_id || tarefa.projetoId || listaProjetos[0]?.id || 1
+      );
+
+      const payload = {
+        texto: tarefa.texto || "",
+        coluna: novaColuna,
+        prioridade: prioridadeValidada,
+        usuarioId: idUsuarioNum,
+        usuario_id: idUsuarioNum,
+        projetoId: idProjetoNum,
+        projeto_id: idProjetoNum,
+        id_prioridade: Number(tarefa.id_prioridade || tarefa.idprioridade || 5),
+        idprioridade: Number(tarefa.id_prioridade || tarefa.idprioridade || 5),
+      };
+
+      const resposta = await api.put(`/tarefas/${id}`, payload);
+      setTarefas(tarefas.map((t) => (t.id === id ? resposta.data : t)));
+    } catch (e) {
+      alert(mensagensDeErro ? mensagensDeErro(e).join("\n") : "Erro ao mover tarefa.");
+    }
   }
 
   return (
@@ -80,15 +155,10 @@ function MiniKanban() {
       <Sidebar />
       {carregando && (
         <p style={{ textAlign: "center", color: "#94A3B8" }}>
-          Carregando tarefas...
+          Carregando dados...
         </p>
       )}
-
       {erro && <p style={{ textAlign: "center", color: "#EF4444" }}>{erro}</p>}
-
-      {!carregando && !erro && (
-        <div className="kanban-quadro"></div>
-      )}
 
       {!carregando && (
         <FormularioTarefa
@@ -97,6 +167,9 @@ function MiniKanban() {
           salvarTarefa={salvarTarefa}
           moverTarefa={moverTarefa}
           removerTarefa={deletarTarefa}
+          listaPrioridades={listaPrioridades}
+          listaUsuarios={listaUsuarios}
+          listaProjetos={listaProjetos}
         />
       )}
 

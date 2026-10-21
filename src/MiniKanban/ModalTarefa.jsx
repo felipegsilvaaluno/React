@@ -1,12 +1,30 @@
 import { useState, useEffect } from "react";
 import styles from "./ModalTarefa.module.css";
-import axios from "axios";
+import { mensagensDeErro } from "../api/api";
+import { useAuth } from "../contexts/AuthContext";
 
-function ModalTarefa({ aberto, onFechar, onSalvar, tarefa = null, coluna = "afazer" }) {
+function paraNumero(valor) {
+  return valor ? Number(valor) : null;
+}
+
+function ModalTarefa({
+  aberto,
+  onFechar,
+  onSalvar,
+  tarefa = null,
+  coluna = "afazer",
+  prioridades = [],
+  usuarios = [],
+  projetos = [],
+}) {
+  const { usuario } = useAuth();
+
   const [texto, setTexto] = useState("");
-  const [cep, setCep] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [prioridade, setPrioridade] = useState("media");
+  const [idPrioridade, setIdPrioridade] = useState(2);
+  const [idUsuario, setIdUsuario] = useState("");
+  const [idProjeto, setIdProjeto] = useState("");
+  const [erros, setErros] = useState([]);
+  const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -18,53 +36,42 @@ function ModalTarefa({ aberto, onFechar, onSalvar, tarefa = null, coluna = "afaz
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [aberto, onFechar]);
 
- 
   useEffect(() => {
+    setErros([]);
     if (tarefa) {
       setTexto(tarefa.texto || "");
-      setCidade(tarefa.endereco || tarefa.cidade || "");
-      setPrioridade(tarefa.prioridade || "media");
-      setCep("");
+      setIdPrioridade(tarefa.id_prioridade || tarefa.idprioridade || 2);
+      setIdUsuario(tarefa.usuario_id || "");
+      setIdProjeto(tarefa.projeto_id || "");
     } else {
       setTexto("");
-      setCep("");
-      setCidade("");
-      setPrioridade("media");
+      setIdPrioridade(2);
+      setIdUsuario(usuario?.id || usuarios[0]?.id || "");
+      setIdProjeto(projetos[0]?.id || "");
     }
-  }, [tarefa, aberto]);
+  }, [tarefa, aberto, usuario, usuarios, projetos]);
 
-  async function consultarCidade(cepDigitado) {
-    const cepLimpo = cepDigitado.replace(/\D/g, "");
-    if (cepLimpo.length < 8) return;
-
+  async function handleSalvar(e) {
+    if (e) e.preventDefault();
+    setErros([]);
+    setSalvando(true);
     try {
-      const { data } = await axios.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-      if (!data.erro) {
-        setCidade(`${data.localidade} - ${data.uf}`);
-      } else {
-        setCidade("CEP não encontrado");
-      }
+      await onSalvar({
+        ...tarefa,
+        id: tarefa?.id,
+        texto,
+        coluna: tarefa?.coluna || coluna,
+        id_prioridade: paraNumero(idPrioridade),
+        idprioridade: paraNumero(idPrioridade),
+        usuario_id: paraNumero(idUsuario),
+        projeto_id: paraNumero(idProjeto),
+      });
+      onFechar();
     } catch (e) {
-      setCidade("Erro ao buscar CEP");
+      setErros(mensagensDeErro ? mensagensDeErro(e) : []);
+    } finally {
+      setSalvando(false);
     }
-  }
-
-  function handleSalvar(e) {
-    e.preventDefault();
-    if (!texto.trim()) {
-      alert("Por favor, digite o texto da tarefa.");
-      return;
-    }
-
-    onSalvar({
-      id: tarefa?.id,
-      texto: texto.trim(),
-      cidade: cidade,
-      prioridade,
-      coluna: tarefa?.coluna || coluna,
-    });
-
-    onFechar();
   }
 
   if (!aberto) return null;
@@ -75,38 +82,78 @@ function ModalTarefa({ aberto, onFechar, onSalvar, tarefa = null, coluna = "afaz
         <h2>{tarefa ? "Editar tarefa" : "Nova tarefa"}</h2>
 
         <form onSubmit={handleSalvar} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <input
-            type="text"
-            placeholder="Texto da tarefa"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-          />
+          <div className={styles.campo}>
+            <label htmlFor="tarefa-texto">Tarefa</label>
+            <input
+              id="tarefa-texto"
+              type="text"
+              placeholder="Descreva a tarefa"
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
+            />
+          </div>
 
-          <input
-            type="text"
-            maxLength={8}
-            placeholder="CEP (opcional)"
-            value={cep}
-            onChange={(e) => {
-              const val = e.target.value.replace(/\D/g, "");
-              setCep(val);
-              consultarCidade(val);
-            }}
-          />
+          <div className={styles.campo}>
+            <label htmlFor="tarefa-responsavel">Responsável</label>
+            <select
+              id="tarefa-responsavel"
+              value={idUsuario}
+              onChange={(e) => setIdUsuario(e.target.value)}
+            >
+              {usuarios.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.nome}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          {cidade && <p className={styles.cidade}>📍 {cidade}</p>}
+          <div className={styles.campo}>
+            <label htmlFor="tarefa-projeto">Projeto</label>
+            <select
+              id="tarefa-projeto"
+              value={idProjeto}
+              onChange={(e) => setIdProjeto(e.target.value)}
+            >
+              {projetos.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.nome}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <select value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>
-            <option value="alta">Alta</option>
-            <option value="media">Média</option>
-            <option value="baixa">Baixa</option>
-          </select>
+          <div className={styles.campo}>
+            <label htmlFor="tarefa-prioridade">Prioridade</label>
+            <select
+              id="tarefa-prioridade"
+              value={idPrioridade}
+              onChange={(e) => setIdPrioridade(e.target.value)}
+            >
+              {prioridades.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.descricao}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Passo 11: Lista de erros antes da div de botões */}
+          {erros.length > 0 && (
+            <ul className={styles.erros}>
+              {erros.map((mensagem, i) => (
+                <li key={i}>{mensagem}</li>
+              ))}
+            </ul>
+          )}
 
           <div className={styles.botoes}>
             <button type="button" onClick={onFechar}>
               Cancelar
             </button>
-            <button type="submit">Salvar</button>
+            <button type="submit" disabled={salvando}>
+              {salvando ? "Salvando..." : "Salvar"}
+            </button>
           </div>
         </form>
       </div>
