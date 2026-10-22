@@ -63,16 +63,25 @@ function FormularioTarefa({
     <div>
       <Header titulo="TaskFlow - Mini Kanban" />
 
+      {/* Alinhamento limpo do filtro de prioridade */}
       <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
-          padding: "0 20px 10px",
+          padding: "0 0 16px 0",
           alignItems: "center",
-          gap: "10px",
+          gap: "8px",
         }}
       >
-        <label htmlFor="filtro-prioridade" style={{ color: "#01050a" }}>
+        <label
+          htmlFor="filtro-prioridade"
+          style={{
+            color: "#ffffff",
+            fontSize: "0.9rem",
+            fontWeight: "600",
+            textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
+          }}
+        >
           Prioridade:
         </label>
         <select
@@ -81,10 +90,13 @@ function FormularioTarefa({
           onChange={(e) => setFiltroPrioridade(e.target.value)}
           style={{
             padding: "6px 12px",
-            borderRadius: "6px",
-            background: "#0d1b2a",
-            color: "#e2e8f0",
-            border: "1px solid #334155",
+            borderRadius: "8px",
+            background: "rgba(13, 27, 42, 0.85)",
+            color: "#f8fafc",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            fontSize: "0.875rem",
+            outline: "none",
+            cursor: "pointer",
           }}
         >
           <option value="todas">Todas</option>

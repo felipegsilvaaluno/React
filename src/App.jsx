@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Sobre from "./Pages/Sobre";
 import Login from "./Pages/Login";
 import MiniKanban from "./MiniKanban/MiniKanban";
-import Tarefasv1 from "./Tarefasv1";
 import RotaPrivada from './Componentes/RotaPrivada/RotaPrivada';
 
 function App() {
@@ -19,16 +18,7 @@ function App() {
                 <MiniKanban />{" "}
               </RotaPrivada>
             }
-          />
-          <Route
-            path="/ListaTarefas"
-            element={
-              <RotaPrivada>
-                {" "}
-                <Tarefasv1 />{" "}
-              </RotaPrivada>
-            }
-          />
+          />      
           <Route
             path="/Sobre"
             element={

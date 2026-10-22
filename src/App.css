@@ -4,9 +4,6 @@
   box-sizing: border-box;
 }
 
-/*body {
-  background: radial-gradient(rgb(128, 7, 172), #000);
-}*/
 body {
   background: url("./assets/montanhas.jpg");
   background-repeat: no-repeat; 
@@ -82,31 +79,6 @@ button:hover {
   list-style: none;
   text-align: center;
 }
-
-/*.tarefa {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  background: #3c48ca8e;
-  border-top: 2px solid #ce9014da;
-  margin-top: 5px;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-.btn-remover {
-  background: rgba(255, 0, 0, 0.137);
-}
-
-.btn-remover:hover {
-  background: rgba(255, 0, 0, 0.801);
-}
-
-.concluida {
-  text-decoration: line-through;
-  color: #b4bcc7be;
-}*/
 
 .app-layout{
   display: flex;

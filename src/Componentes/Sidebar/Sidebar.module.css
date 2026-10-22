@@ -3,7 +3,7 @@
   min-height: 100vh;
   background-color: #ffffff;
   border-right: 1px solid #eaecf0;
-  padding: 28px 20px;
+  padding: 28px 16px;
   position: fixed;
   top: 0;
   left: 0;
@@ -11,8 +11,41 @@
   flex-direction: column;
   justify-content: space-between;
   box-sizing: border-box;
-  z-index: 50;
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.02);
+  z-index: 100;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.05);
+  transition: width 0.3s ease;
+}
+
+.recolhida {
+  width: 70px;
+  padding: 28px 8px;
+}
+
+/* Botão circular perfeitamente posicionado na borda direita */
+.btnToggle {
+  position: absolute;
+  top: 28px;
+  right: -13px;
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+  z-index: 101;
+}
+
+.btnToggle:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
 }
 
 .logo h1 {
@@ -21,7 +54,14 @@
   font-weight: 800;
   letter-spacing: -0.025em;
   margin: 0 0 24px 0;
-  padding-left: 10px;
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+.recolhida .logo h1 {
+  padding-left: 0;
+  text-align: center;
+  font-size: 1.1rem;
 }
 
 .nav {
@@ -34,13 +74,20 @@
 .link {
   color: #64748b;
   text-decoration: none;
-  padding: 10px 14px;
+  padding: 10px 12px;
   border-radius: 8px;
   font-size: 0.925rem;
   font-weight: 500;
   display: flex;
   align-items: center;
+  gap: 10px;
   transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.recolhida .link {
+  justify-content: center;
+  padding: 10px;
 }
 
 .link:hover {
@@ -49,14 +96,21 @@
 }
 
 .ativo {
-  background-color: #f1f5f9;
+  background-color: #eff6ff;
   color: #2563eb;
   font-weight: 600;
 }
 
+.icone {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .btnLogout {
   margin-top: auto;
-  padding: 10px 14px;
+  padding: 10px 12px;
   background-color: transparent;
   color: #ef4444;
   border: 1px solid #fee2e2;
@@ -65,11 +119,55 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.recolhida .btnLogout {
+  padding: 10px;
+  border-color: transparent;
 }
 
 .btnLogout:hover {
   background-color: #fef2f2;
   border-color: #fca5a5;
   color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid #eaecf0;
+    padding: 12px 16px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .btnToggle {
+    display: none; /* Oculta botão de recolher em telas pequenas */
+  }
+
+  .logo h1 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .nav {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btnLogout {
+    margin-top: 0;
+    padding: 6px 10px;
+  }
 }
