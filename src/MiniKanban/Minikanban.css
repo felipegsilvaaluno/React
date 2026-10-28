@@ -6,7 +6,7 @@
 }
 
 body {
-  background: url("../../public/montanhas.jpg");
+  background: url("/montanhas.jpg");
   background-repeat: no-repeat; 
   background-size: cover; 
   background-position: center;
